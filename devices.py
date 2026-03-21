@@ -19,7 +19,6 @@ def grate_gatsby(
     comb: Device,
     vcc_pad_size: tuple[float, float],
     gnd_pad_size: tuple[float, float],
-    name: float = "1",
 ) -> Device:
     """
     Optically tunable diffraction grating with comb drive actuation and flexure support.
@@ -96,9 +95,6 @@ def grate_gatsby(
         width=a_bl.ports["fixed"].width,
         path_type="L",
     )
-    # D.add_ref(pr.route_sharp(
-    #     comb_left_ref.ports["fixed_conn"], comb_right_ref.ports["fixed_conn"], width=comb_left_ref.ports["fixed_conn"].width, path_type="C", length1=1000, length2=1000, left1=3000
-    # ))
     D.add_port(
         name="vcc_port",
         midpoint=(
@@ -108,7 +104,7 @@ def grate_gatsby(
             )
             / 2,
             comb_left_ref.ports["fixed_conn"].midpoint[1]
-            - 3000
+            - 3200
             - comb_left_ref.ports["fixed_conn"].width / 2,
         ),
         orientation=-90,
@@ -126,137 +122,8 @@ def grate_gatsby(
         width=comb_right_ref.ports["fixed_conn"].width,
         path_type="U",
     )
-
-    # text
-    # vcc_text = pg.text("V C C", size=200, justify="center")
-    # gnd_text_top = pg.text("G N D", size=200, justify="center")
-    # gnd_text_bottom = pg.text("G N D", size=200, justify="center")
-    dev_text = pg.text(
-        f"D U A L   {" ".join([i for i in name])}", size=200, justify="center"
-    )
-    # D.add_ref(vcc_text).move((vcc_pad.ports["S"].midpoint[0], vcc_pad.ports["S"].midpoint[1] - 600))
-    # D.add_ref(gnd_text_top).move((gnd_pad_top.ports["N"].midpoint[0], gnd_pad_top.ports["N"].midpoint[1] + 600))
-    # D.add_ref(gnd_text_bottom).move((gnd_pad_bot.ports["S"].midpoint[0], gnd_pad_bot.ports["S"].midpoint[1] - 600))
+    dev_text = pg.text(f"D U A L", size=200, justify="center")
     D.add_ref(dev_text).move((gnd_pad_bot.ports["S"].midpoint[0], -4500))
-    # qp(D)
-    return D
-
-
-def grate_gatsby_stretched(
-    flexible_grating: Device,
-    anchor: Device,
-    comb: Device,
-    vcc_pad_size: tuple[float, float],
-    gnd_pad_size: tuple[float, float],
-) -> Device:
-    """
-    Optically tunable diffraction grating with comb drive actuation and flexure support.
-    Original topology (less compact).
-    flexible_grating: the diffraction grating to be actuated
-    anchor: the anchor and flexure support structure
-    comb: the comb drive structure
-    """
-    D = Device("grate_gatsby")
-
-    grating_ref = D.add_ref(flexible_grating)
-    comb_left_ref = D.add_ref(comb)
-    comb_left_ref.connect("grating_conn", grating_ref.ports["left"])
-    a_tl = D.add_ref(anchor).connect("floating", comb_left_ref.ports["anchor_top"])
-    a_bl = (
-        D.add_ref(anchor)
-        .mirror((1, 0))
-        .connect("floating", comb_left_ref.ports["anchor_bottom"])
-    )
-
-    comb_right_ref = D.add_ref(comb)
-    comb_right_ref.mirror((1, 0))
-    comb_right_ref.connect("grating_conn", grating_ref.ports["right"])
-    a_tr = (
-        D.add_ref(anchor)
-        .mirror((0, 1))
-        .connect("floating", comb_right_ref.ports["anchor_top"])
-    )
-    a_br = D.add_ref(anchor).connect("floating", comb_right_ref.ports["anchor_bottom"])
-
-    # pads. we'll need two gnd pads (top and bottom) and a vcc trace that routes around the device.
-    D << pr.route_sharp(
-        a_tl.ports["fixed"],
-        a_tr.ports["fixed"],
-        width=a_tl.ports["fixed"].width,
-        path_type="U",
-        length1=2000,
-    )
-    D << pr.route_sharp(
-        a_br.ports["fixed"],
-        a_bl.ports["fixed"],
-        width=a_bl.ports["fixed"].width,
-        path_type="U",
-        length1=2000,
-    )
-    D.add_port(
-        name="gnd_port_top",
-        midpoint=(
-            (a_tl.ports["fixed"].midpoint[0] + a_tr.ports["fixed"].midpoint[0]) / 2,
-            a_tl.ports["fixed"].midpoint[1] + 2000,
-        ),
-        orientation=90,
-    )
-    D.add_port(
-        name="gnd_port_bottom",
-        midpoint=(
-            (a_bl.ports["fixed"].midpoint[0] + a_br.ports["fixed"].midpoint[0]) / 2,
-            a_bl.ports["fixed"].midpoint[1] - 2000,
-        ),
-        orientation=270,
-    )
-    gnd_pad_top = D.add_ref(pg.compass(size=gnd_pad_size)).connect(
-        "S", D.ports["gnd_port_top"]
-    )
-    gnd_pad_bot = D.add_ref(pg.compass(size=gnd_pad_size)).connect(
-        "N", D.ports["gnd_port_bottom"]
-    )
-    D.add_ref(
-        pr.route_sharp(
-            comb_left_ref.ports["fixed_conn"],
-            comb_right_ref.ports["fixed_conn"],
-            width=comb_left_ref.ports["fixed_conn"].width,
-            path_type="C",
-            length1=8000,
-            length2=8000,
-            left1=10000,
-        )
-    )
-    D.add_port(
-        name="vcc_port",
-        midpoint=(
-            (
-                comb_left_ref.ports["fixed_conn"].midpoint[0]
-                + comb_right_ref.ports["fixed_conn"].midpoint[0]
-            )
-            / 2,
-            comb_left_ref.ports["fixed_conn"].midpoint[1]
-            - 10000
-            - comb_left_ref.ports["fixed_conn"].width / 2,
-        ),
-        orientation=-90,
-    )
-    vcc_pad = D.add_ref(pg.compass(size=vcc_pad_size)).connect("N", D.ports["vcc_port"])
-
-    # text
-    vcc_text = pg.text("V C C", size=500, justify="center")
-    gnd_text_top = pg.text("G N D", size=500, justify="center")
-    gnd_text_bottom = pg.text("G N D", size=500, justify="center")
-    dev_text = pg.text(f"D E V I C E   1", size=500, justify="center")
-    D.add_ref(vcc_text).move(
-        (vcc_pad.ports["S"].midpoint[0], vcc_pad.ports["S"].midpoint[1] - 600)
-    )
-    D.add_ref(gnd_text_top).move(
-        (gnd_pad_top.ports["N"].midpoint[0], gnd_pad_top.ports["N"].midpoint[1] + 600)
-    )
-    D.add_ref(gnd_text_bottom).move(
-        (gnd_pad_bot.ports["S"].midpoint[0], gnd_pad_bot.ports["S"].midpoint[1] - 600)
-    )
-    D.add_ref(dev_text).move((0, -18000))
     # qp(D)
     return D
 
@@ -267,7 +134,6 @@ def less_grate_gatsby(
     comb: Device,
     vcc_pad_size: tuple[float, float],
     gnd_pad_size: tuple[float, float],
-    name: str = "1",
 ) -> Device:
     """
     Single sided optically tunable diffraction grating (only one comb drive).
@@ -295,9 +161,6 @@ def less_grate_gatsby(
             a_bot.ports["fixed_l"],
             width=a_top.ports["fixed_l"].width,
             path_type="U",
-            # length1=2000,
-            # length2=2000,
-            # left1=-dist
             length1=dist,
         )
     )
@@ -319,18 +182,20 @@ def less_grate_gatsby(
     # text
     vcc_text = pg.text("V C C", size=200, justify="center")
     gnd_text = pg.text("G N D", size=200, justify="center")
-    dev_text = pg.text(
-        f"S I N G L E   {" ".join([i for i in name])}", size=200, justify="center"
-    )
+    dev_text = pg.text(f"S I N G L E", size=200, justify="center")
 
-    D.add_ref(vcc_text).move((vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 300))
-    D.add_ref(gnd_text).move((gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 300))
-    D.add_ref(dev_text).move((0, -2000))
+    D.add_ref(vcc_text).move(
+        (vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 200)
+    )
+    D.add_ref(gnd_text).move(
+        (gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 200)
+    )
+    D.add_ref(dev_text).move((0, -2200))
     # qp(D)
     return D
 
 
-def just_grate_gatsby(grating: Device, name: str = "1") -> Device:
+def just_grate_gatsby(grating: Device) -> Device:
     """
     Just the diffraction grating, without any actuation or support structures.
     """
@@ -349,9 +214,7 @@ def just_grate_gatsby(grating: Device, name: str = "1") -> Device:
     D << grating
 
     # text
-    dev_text = pg.text(
-        f"G R A T E   {" ".join([i for i in name])}", size=200, justify="center"
-    )
+    dev_text = pg.text(f"G R A T E", size=200, justify="center")
     D.add_ref(dev_text).move((0, -1300))
     # qp(D)
     return D
@@ -362,7 +225,6 @@ def combed_gatsby(
     anchor: Device,
     vcc_pad_size: tuple[float, float],
     gnd_pad_size: tuple[float, float],
-    name: str = "1",
 ) -> Device:
     D = Device("combed_gatsby")
     comb_ref = D.add_ref(comb)
@@ -373,6 +235,11 @@ def combed_gatsby(
         .connect("floating", comb_ref.ports["anchor_top"])
     )
     a_bot = D.add_ref(anchor).connect("floating", comb_ref.ports["anchor_bottom"])
+    D << pr.route_sharp(
+        a_top.ports["fixed_l"],
+        a_bot.ports["fixed_l"],
+        width=a_top.ports["fixed_l"].width,
+    )
     D.add_port(
         name="gnd_port",
         midpoint=(
@@ -391,16 +258,14 @@ def combed_gatsby(
     # text
     vcc_text = pg.text("V C C", size=200, justify="center")
     gnd_text = pg.text("G N D", size=200, justify="center")
-    dev_text = pg.text(
-        f"C O M B   {" ".join([i for i in name])}", size=200, justify="center"
-    )
+    dev_text = pg.text(f"C O M B", size=200, justify="center")
     D.add_ref(vcc_text).move(
-        (vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 300)
+        (vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 200)
     )
     D.add_ref(gnd_text).move(
-        (gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 300)
+        (gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 200)
     )
-    D.add_ref(dev_text).move((0, -1000))
+    D.add_ref(dev_text).move((0, -1200))
     # qp(D)
     return D
 
@@ -496,8 +361,6 @@ def spring(
     D.polygons[0].fillet([0, 0, 0, 0, 0, fillet, fillet, 0])
     D << fillet_shape(radius=1).rotate(90).move((-w, 0))
     D << fillet_shape(radius=1).rotate(0).move((space + w, 0))
-    # D << fillet_shape(radius=fillet/2).rotate(90).move((space, L - L_right))
-    # D << fillet_shape(radius=fillet/2).move((0, L - L_right))
     # qp(D)
     return D
 
@@ -539,9 +402,6 @@ def anchor(
     D.add_port(
         name="floating", midpoint=(space + w / 2, L1 - L2), width=w, orientation=270
     )
-    # D.add_port(
-    #     name="fixed", midpoint=(-anchor_w, -anchor_h / 2), width=anchor_w, orientation=180
-    # )
     D << fillet_shape(radius=fillet).rotate(90).move((space, L1 - L2))
     D << fillet_shape(radius=fillet).rotate(0).move((space + w, L1 - L2))
     D.add_port(
@@ -667,16 +527,13 @@ def truss(
     r = pg.rectangle(size=(w, h))
     hole = pg.circle(radius=diam / 2)
     H = Device("holes")
-    # for x in range(dist+diam/2, int(w)-dist-diam+1, dist+diam):
-    #     for y in range(dist+diam, int(h)-dist-diam+1, dist+diam):
-    #         H.add_ref(hole).move((x, y))
 
-    # slots_x = np.arange(margin+diam/2, w-margin-diam/2+1, dist+diam)
-    # slots_y = np.arange(margin+diam/2, h-margin-diam/2+1, dist+diam)
-    # locations = [(x, y) for x in slots_x for y in slots_y]
-    # for loc in locations:
-    #     H.add_ref(hole).move(loc)
-    # r = pg.boolean(r, H, operation="A-B", layer=0)
+    slots_x = np.arange(margin + diam / 2, w - margin - diam / 2 + 1, dist + diam)
+    slots_y = np.arange(margin + diam / 2, h - margin - diam / 2 + 1, dist + diam)
+    locations = [(x, y) for x in slots_x for y in slots_y]
+    for loc in locations:
+        H.add_ref(hole).move(loc)
+    r = pg.boolean(r, H, operation="A-B", layer=0)
     D.add_ref(r)
     # qp(D)
     truss_mem[(w, h, diam, dist, margin)] = D
