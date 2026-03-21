@@ -555,14 +555,14 @@ if __name__ == "__main__":
         vcc_pad_size=(1000, 1000),
         gnd_pad_size=(1000, 1000),
     )
-    # grate.write_gds("grate_full.gds")
+    grate.write_gds("output/grate_full.gds")
     # combed = combed_gatsby(
     #     comb=c,
     #     anchor=a,
     #     vcc_pad_size=(1000, 1000),gnd_pad_size=(1000, 1000),
     #     name="1"
     # )
-    # combed.write_gds("comb_drive.gds")
+    # combed.write_gds("output/comb_drive.gds")
     # f = grating(N=100, bar_w=6, bar_l=1000, pitch=10)
     # just_g = just_grate_gatsby(grating=f, name="1")
-    # just_g.write_gds("just_grate.gds")
+    # just_g.write_gds("output/just_grate.gds")

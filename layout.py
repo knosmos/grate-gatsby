@@ -103,7 +103,7 @@ def wafer():
     finger_lengths = [50, 80, 100]
     spring_lengths = [50, 100, 200]
     devices = []
-    f = open("device_params.txt", "w")
+    f = open("output/device_params.txt", "w")
     for num, paramset in enumerate(
         product(
             flexure_widths,
@@ -126,7 +126,7 @@ def wafer():
     h = G.bbox[1][1] - G.bbox[0][1]
     G.move((-G.bbox[0][0] - w / 2, -G.bbox[0][1] - h / 2))
     D << G
-    D.write_gds("wafer.gds")
+    D.write_gds("output/wafer.gds")
 
 
 if __name__ == "__main__":
