@@ -1,0 +1,390 @@
+224A (double in GRT 23AB)
+
+225 (double in GRT 23AB)
+
+228 (double in GRT 23AB)
+
+229 (single in GRT Singles)
+
+244B (single in GRT Singles)
+
+244C (double in GRT 23AB)
+
+252 (double in GRT 23AB)
+
+321 (double in GRT 23AB)
+
+322B (double in GRT 23AB)
+
+322C (double in GRT 23AB)
+
+324 (double in GRT 23AB)
+
+325 (single in GRT Singles)
+
+326 (double in GRT 23AB)
+
+327 (double in GRT 23AB)
+
+328 (double in GRT 23AB)
+
+330 (single in GRT Singles)
+
+337 (triple in GRT 34C)
+
+340A (double in GRT 34C)
+
+340B (double in GRT 34C)
+
+341 (double in GRT 23AB)
+
+344 (double in GRT 23AB)
+
+345 (single in GRT Singles)
+
+371 (double in GRT 34C)
+
+372 (single in GRT Singles)
+
+376 (single in GRT Singles)
+
+379A (double in GRT 34C)
+
+381 (triple in GRT 34C)
+
+421B (single in GRT Singles)
+
+421C (double in GRT 4AB)
+
+422B (double in GRT 4AB)
+
+424A (double in GRT 4AB)
+
+424B (single in GRT Singles)
+
+426 (single in GRT Singles)
+
+427 (single in GRT Singles)
+
+428 (double in GRT 4AB)
+
+429 (single in GRT Singles)
+
+438 (double in GRT 34C)
+
+440 (double in GRT 34C)
+
+446 (double in GRT 4AB)
+
+448 (single in GRT Singles)
+
+450 (single in GRT Singles)
+
+452 (single in GRT Singles)
+
+464 (double in GRT 4AB)
+
+466 (single in GRT Singles)
+
+467 (triple in GRT 4AB)
+
+472 (double in GRT 34C)
+
+474 (single in GRT Singles)
+
+476 (single in GRT Singles)
+
+477 (single in GRT Singles)
+
+479A (single in GRT Singles)
+
+479B (single in GRT Singles)
+
+521B (single in GRT Singles)
+
+521C (double in GRT 5AB)
+
+522B (double in GRT 5AB)
+
+524 (double in GRT 5AB)
+
+527 (single in GRT Singles)
+
+532 (single in GRT Singles)
+
+533 (double in GRT 5AB)
+
+534 (single in GRT Singles)
+
+535 (double in GRT 5AB)
+
+537 (double in GRT 56C)
+
+539 (single in GRT Singles)
+
+540 (single in GRT Singles)
+
+543 (single in GRT Singles)
+
+544 (single in GRT Singles)
+
+545 (single in GRT Singles)
+
+548 (single in GRT Singles)
+
+549A (single in GRT Singles)
+
+549B (single in GRT Singles)
+
+551 (single in GRT Singles)
+
+552 (single in GRT Singles)
+
+553 (double in GRT 5AB)
+
+564 (single in GRT Singles)
+
+566 (single in GRT Singles)
+
+569 (single in GRT Singles)
+
+570 (single in GRT Singles)
+
+572A (single in GRT Singles)
+
+572B (double in GRT 5AB)
+
+574 (single in GRT Singles)
+
+575 (double in GRT 56C)
+
+577 (single in GRT Singles)
+
+578A (single in GRT Singles)
+
+578B (single in GRT Singles)
+
+624A (double in GRT 67A)
+
+624B (single in GRT Singles)
+
+625 (single in GRT Singles)
+
+626 (single in GRT Singles)
+
+627 (double in GRT 67A)
+
+628 (double in GRT 67A)
+
+629 (single in GRT Singles)
+
+631B (single in GRT Singles)
+
+631C (single in GRT Singles)
+
+631D (single in GRT Singles)
+
+632 (single in GRT Singles)
+
+633 (single in GRT Singles)
+
+634 (triple in GRT 56C)
+
+635 (double in GRT 56C)
+
+636 (single in GRT Singles)
+
+638 (single in GRT Singles)
+
+640 (single in GRT Singles)
+
+643 (single in GRT Singles)
+
+645B (double in GRT 67A)
+
+648 (single in GRT Singles)
+
+649 (single in GRT Singles)
+
+650 (triple in GRT 67A)
+
+652 (double in GRT 67A)
+
+653 (single in GRT Singles)
+
+664 (double in GRT 67A)
+
+665 (single in GRT Singles)
+
+667 (single in GRT Singles)
+
+670 (single in GRT Singles)
+
+675 (double in GRT 56C)
+
+678 (single in GRT Singles)
+
+724 (double in GRT 67A)
+
+725 (single in GRT Singles)
+
+728 (single in GRT Singles)
+
+729 (double in GRT 7BC8B)
+
+730 (single in GRT Singles)
+
+731 (single in GRT Singles)
+
+732 (triple in GRT 7BC8B)
+
+733 (triple in GRT 7BC8B)
+
+738B (double in GRT 7BC8B)
+
+738C (single in GRT Singles)
+
+739 (single in GRT Singles)
+
+740 (single in GRT Singles)
+
+741A (triple in GRT 67A)
+
+741B (single in GRT Singles)
+
+743 (single in GRT Singles)
+
+744 (single in GRT Singles)
+
+746 (single in GRT Singles)
+
+775 (single in GRT Singles)
+
+776 (triple in GRT 7BC8B)
+
+778 (double in GRT 7BC8B)
+
+779 (single in GRT Singles)
+
+780 (double in GRT 7BC8B)
+
+821 (double in GRT 8910A)
+
+824 (double in GRT 8910A)
+
+825 (single in GRT Singles)
+
+839 (single in GRT Singles)
+
+840 (double in GRT 8910C)
+
+846 (triple in GRT 8910A)
+
+865 (single in GRT Singles)
+
+866 (double in GRT 7BC8B)
+
+871 (triple in GRT 7BC8B)
+
+872 (single in GRT Singles)
+
+873 (single in GRT Singles)
+
+875 (double in GRT 8910C)
+
+921B (triple in GRT 8910A)
+
+921C (double in GRT 8910A)
+
+922C (double in GRT 8910A)
+
+922D (single in GRT Singles)
+
+924 (double in GRT 8910A)
+
+931 (triple in GRT 910B)
+
+933 (triple in GRT 910B)
+
+936 (single in GRT Singles)
+
+939 (double in GRT 8910C)
+
+940 (double in GRT 8910C)
+
+941 (double in GRT 8910C)
+
+945 (triple in GRT 8910A)
+
+966 (triple in GRT 910B)
+
+972 (single in GRT Singles)
+
+973 (single in GRT Singles)
+
+974 (single in GRT Singles)
+
+975 (single in GRT Singles)
+
+976 (single in GRT Singles)
+
+978 (double in GRT 8910C)
+
+979 (single in GRT Singles)
+
+1021A (single in GRT Singles)
+
+1021C (triple in GRT 8910A)
+
+1021D (double in GRT 8910A)
+
+1022B (double in GRT 8910A)
+supplementalWOLS
+
+1024 (double in GRT 8910A)
+
+1025 (single in GRT Singles)
+
+1031B (single in GRT Singles)
+
+1032 (double in GRT 910B)
+
+1033 (single in GRT Singles)
+
+1034 (single in GRT Singles)
+
+1036 (double in GRT 910B)
+
+1038 (single in GRT Singles)
+
+1039 (double in GRT 8910C)
+
+1040 (double in GRT 8910C)
+
+1044 (single in GRT Singles)
+
+1045 (single in GRT Singles)
+
+1046 (double in GRT 8910A)
+
+1052A (double in GRT 910B)
+
+1052B (single in GRT Singles)
+
+1064 (double in GRT 910B)
+
+1065 (single in GRT Singles)
+
+1066 (triple in GRT 910B)
+
+1072 (triple in GRT 910B)
+
+1073 (single in GRT Singles)
+
+1074 (single in GRT Singles)
+
+1075 (single in GRT Singles)
+
+1077 (single in GRT Singles)
+
+1078B (double in GRT 8910C)

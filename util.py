@@ -29,7 +29,7 @@ def knockout(text: str, margin: float) -> Device:
     """
     Knockout text.
     """
-    text_obj = pg.text(f"D E V I C E   {" ".join(text)}", size=200)
+    text_obj = pg.text(f"D E V I C E   {" ".join(text)}", size=400)
     bbox = text_obj.bbox
     text_obj.move((margin, margin))
     rect = pg.rectangle((bbox[1][0] + margin * 2, bbox[1][1] + margin * 2))

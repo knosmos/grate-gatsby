@@ -180,17 +180,17 @@ def less_grate_gatsby(
     gnd_pad = D.add_ref(pg.compass(size=gnd_pad_size)).connect("W", D.ports["gnd_port"])
 
     # text
-    vcc_text = pg.text("V C C", size=200, justify="center")
-    gnd_text = pg.text("G N D", size=200, justify="center")
-    dev_text = pg.text(f"S I N G L E", size=200, justify="center")
+    vcc_text = pg.text("V C C", size=200, justify="center").rotate(180)
+    gnd_text = pg.text("G N D", size=200, justify="center").rotate(180)
+    dev_text = pg.text(f"S I N G L E", size=200, justify="center").rotate(180)
 
     D.add_ref(vcc_text).move(
-        (vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 200)
+        (vcc_pad.ports["N"].midpoint[0], vcc_pad.ports["N"].midpoint[1] + 300)
     )
     D.add_ref(gnd_text).move(
-        (gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 200)
+        (gnd_pad.ports["N"].midpoint[0], gnd_pad.ports["N"].midpoint[1] + 300)
     )
-    D.add_ref(dev_text).move((0, -2200))
+    D.add_ref(dev_text).move((-1200, -1500))
     # qp(D)
     return D
 
@@ -299,6 +299,20 @@ def flexible_grating(
         spring_ref_bottom.mirror((1, 0))
         spring_ref_bottom.move((i * pitch + bar_w, 0))
 
+    # Hack in a bunch of truss holes
+    HOLE_DIAM = 4
+    OFFSET_Y = 1.5
+    SPACE_Y = 3
+    hole_template = Device()
+    hole_circle = pg.circle(radius=HOLE_DIAM / 2)
+    for y in np.arange(OFFSET_Y + HOLE_DIAM / 2, bar_l, SPACE_Y + HOLE_DIAM):
+        hole_template.add_ref(hole_circle).move((HOLE_DIAM / 2, y))
+    # Left side
+    D = pg.boolean(D, hole_template, operation="A-B", layer=0)
+    # Right side
+    hole_template.move(((N - 1) * pitch + bar_w - HOLE_DIAM, 0))
+    D = pg.boolean(D, hole_template, operation="A-B", layer=0)
+
     # Ports
     D.add_port(name="left", midpoint=(0, bar_l / 2), width=bar_w, orientation=180)
     D.add_port(
@@ -386,24 +400,119 @@ def anchor(
     fillet: interior fillet radius
     """
     D = Device("anchor")
-    flexure_l = pg.rectangle(size=(w, L1))
-    flexure_r = pg.rectangle(size=(w, L2))
+    # flexures
+    if w >= 8:
+        flexure_l = truss(w=w, h=L1, margin=(w - 4) / 2)
+        flexure_l2 = truss(w=w, h=L1, margin=(w - 4) / 2)
+        flexure_r = truss(w=w, h=L2, margin=(w - 4) / 2)
+    else:
+        flexure_l = pg.rectangle(size=(w, L1))
+        flexure_l2 = pg.rectangle(size=(w, L1))
+        flexure_r = pg.rectangle(size=(w, L2))
     D.add_ref(flexure_l).move((-w, 0))
+    D.add_ref(flexure_l2).move((-4 * w, 0))
     D.add_ref(flexure_r).move((space, L1 - L2))
+    # top fillets
     D.add_ref(fillet_shape(radius=fillet).rotate(-90).move((0, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(180).move((-w, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(-90).move((-3 * w, L1)))
     D.add_ref(fillet_shape(radius=fillet).rotate(180).move((space, L1)))
+    # bottom fillets
+    D.add_ref(fillet_shape(radius=fillet).rotate(90).move((-w, 0)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(0).move((-3 * w, 0)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(90).move((-4 * w, 0)))
+    # anchor rect
     r = pg.rectangle(size=(anchor_w, anchor_h))
     r_ref = D.add_ref(r)
     r_ref.move((-anchor_w, -anchor_h))
-
-    t = truss(w=space + w * 2, h=space + w * 2)
-    D.add_ref(t).move((-w, L1))
-    D.add_ref(fillet_shape(radius=fillet).rotate(90).move((-w, 0)))
+    # suspended
+    t = truss(w=space + w * 5, h=anchor_h)
+    D.add_ref(t).move((-4 * w, L1))
     D.add_port(
         name="floating", midpoint=(space + w / 2, L1 - L2), width=w, orientation=270
     )
     D << fillet_shape(radius=fillet).rotate(90).move((space, L1 - L2))
     D << fillet_shape(radius=fillet).rotate(0).move((space + w, L1 - L2))
+    D.add_port(
+        name="fixed",
+        midpoint=(-anchor_w + fixed_anchor_w / 2, 0),
+        width=fixed_anchor_w,
+        orientation=90,
+    )
+    D.add_port(
+        name="fixed_l",
+        midpoint=(-anchor_w, -anchor_h / 2),
+        width=fixed_anchor_w,
+        orientation=180,
+    )
+    # qp(D)
+    return D
+
+
+def anchor_extraduty(
+    anchor_w: float,
+    anchor_h: float,
+    L1: float,
+    L2: float,
+    w: float,
+    space: float,
+    fillet: float = 3,
+    fixed_anchor_w: float = 100,
+) -> Device:
+    """
+    Anchor and flexure support.
+
+    anchor_size: size of the square anchor
+    L1: length of left flexure
+    L2: length of right flexure
+    w: width of flexure bars
+    space: distance between the two flexure bars
+    fillet: interior fillet radius
+    """
+    D = Device("anchor")
+    # flexures
+    if w >= 8:
+        flexure_l = truss(w=w, h=L1, margin=(w - 4) / 2)
+        flexure_l2 = truss(w=w, h=L1, margin=(w - 4) / 2)
+        flexure_r = truss(w=w, h=L2, margin=(w - 4) / 2)
+        flexure_r2 = truss(w=w, h=L2, margin=(w - 4) / 2)
+    else:
+        flexure_l = pg.rectangle(size=(w, L1))
+        flexure_l2 = pg.rectangle(size=(w, L1))
+        flexure_r = pg.rectangle(size=(w, L2))
+        flexure_r2 = pg.rectangle(size=(w, L2))
+    D.add_ref(flexure_l).move((-w, 0))
+    D.add_ref(flexure_l2).move((-6 * w, 0))
+    D.add_ref(flexure_r).move((space, L1 - L2))
+    D.add_ref(flexure_r2).move((space - 5 * w, L1 - L2))
+    # top fillets
+    D.add_ref(fillet_shape(radius=fillet).rotate(-90).move((0, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(180).move((-w, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(-90).move((-5 * w, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(180).move((space, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(-90).move((space - 4 * w, L1)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(180).move((space - 5 * w, L1)))
+    # bottom fillets
+    D.add_ref(fillet_shape(radius=fillet).rotate(90).move((-w, 0)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(0).move((-5 * w, 0)))
+    D.add_ref(fillet_shape(radius=fillet).rotate(90).move((-6 * w, 0)))
+    # anchor rect
+    r = pg.rectangle(size=(anchor_w, anchor_h))
+    r_ref = D.add_ref(r)
+    r_ref.move((-anchor_w, -anchor_h))
+    # suspended
+    t = truss(w=space + w * 7, h=anchor_h)
+    D.add_ref(t).move((-6 * w, L1))
+    D.add_port(
+        name="floating",
+        midpoint=(space + w / 2 - 2.5 * w, L1 - L2),
+        width=w,
+        orientation=270,
+    )
+    D << fillet_shape(radius=fillet).rotate(90).move((space, L1 - L2))
+    D << fillet_shape(radius=fillet).rotate(0).move((space + w, L1 - L2))
+    D << fillet_shape(radius=fillet).rotate(90).move((space - 5 * w, L1 - L2))
+    D << fillet_shape(radius=fillet).rotate(0).move((space - 4 * w, L1 - L2))
     D.add_port(
         name="fixed",
         midpoint=(-anchor_w + fixed_anchor_w / 2, 0),
@@ -528,8 +637,8 @@ def truss(
     hole = pg.circle(radius=diam / 2)
     H = Device("holes")
 
-    slots_x = np.arange(margin + diam / 2, w - margin - diam / 2 + 1, dist + diam)
-    slots_y = np.arange(margin + diam / 2, h - margin - diam / 2 + 1, dist + diam)
+    slots_x = np.arange(margin + diam / 2, w - diam / 2 + 1, dist + diam)
+    slots_y = np.arange(margin + diam / 2, h - diam / 2 + 1, dist + diam)
     locations = [(x, y) for x in slots_x for y in slots_y]
     for loc in locations:
         H.add_ref(hole).move(loc)
@@ -542,20 +651,20 @@ def truss(
 
 if __name__ == "__main__":
     phidl.set_quickplot_options(blocking=True)
-    f = flexible_grating(N=50, bar_w=6, bar_l=300, pitch=10, spring_l=100, spring_w=2)
-    # a = anchor(anchor_w=580, anchor_h=100, L1=1300, L2=500, w=3, space=94)
-    a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=500, w=5, space=94)
-    # a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=1500, w=3, space=94)
-    c = comb(N=200, w=3, L=100, pitch=12, inset=20, w_fixed=500, w_float=100)
-    # c = comb(N=200, w=3, L=100, pitch=12, inset=20, w_fixed=100, w_float=100)
-    grate = grate_gatsby(
-        flexible_grating=f,
-        anchor=a,
-        comb=c,
-        vcc_pad_size=(1000, 1000),
-        gnd_pad_size=(1000, 1000),
-    )
-    grate.write_gds("output/grate_full.gds")
+    # f = flexible_grating(N=50, bar_w=6, bar_l=300, pitch=10, spring_l=100, spring_w=2)
+    a = anchor(anchor_w=580, anchor_h=100, L1=1300, L2=500, w=3, space=94)
+    # a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=500, w=5, space=94)
+    # # a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=1500, w=3, space=94)
+    # c = comb(N=200, w=3, L=100, pitch=12, inset=20, w_fixed=500, w_float=100)
+    # # c = comb(N=200, w=3, L=100, pitch=12, inset=20, w_fixed=100, w_float=100)
+    # grate = grate_gatsby(
+    #     flexible_grating=f,
+    #     anchor=a,
+    #     comb=c,
+    #     vcc_pad_size=(1000, 1000),
+    #     gnd_pad_size=(1000, 1000),
+    # )
+    # grate.write_gds("output/grate_full.gds")
     # combed = combed_gatsby(
     #     comb=c,
     #     anchor=a,
