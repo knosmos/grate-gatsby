@@ -22,16 +22,19 @@ def box(w: float, h: float, m: float = 250, layer: int = 1) -> Device:
     bbox_inner = pg.rectangle((w - m * 2, h - m * 2)).move(
         (-(w - m * 2) / 2, -(h - m * 2) / 2)
     )
-    return pg.boolean(bbox_outer, bbox_inner, "A-B")
+    dev = Device("box")
+    dev << pg.boolean(bbox_outer, bbox_inner, "A-B")
+    return dev
 
 
 def knockout(text: str, margin: float) -> Device:
     """
     Knockout text.
     """
-    text_obj = pg.text(f"D E V I C E   {" ".join(text)}", size=400)
+    text_obj = pg.text(f"D E V I C E   {" ".join(text)}", size=300)
     bbox = text_obj.bbox
     text_obj.move((margin, margin))
     rect = pg.rectangle((bbox[1][0] + margin * 2, bbox[1][1] + margin * 2))
     rect = pg.boolean(rect, text_obj, "A-B")
+    rect.name = "knockout"
     return rect
