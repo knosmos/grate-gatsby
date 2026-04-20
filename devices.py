@@ -19,7 +19,7 @@ def grate_gatsby(
     comb: Device,
     vcc_pad_size: tuple[float, float],
     gnd_pad_size: tuple[float, float],
-    gnd_trace_length: float=500
+    gnd_trace_length: float = 500,
 ) -> Device:
     """
     Optically tunable diffraction grating with comb drive actuation and flexure support.
@@ -155,7 +155,9 @@ def less_grate_gatsby(
     grating_right_point = grating_ref.ports["right"].midpoint
     anchor_top_point = a_top.ports["fixed_l"].midpoint
     anchor_bot_point = a_bot.ports["fixed_l"].midpoint
-    dist = grating_right_point[0] - anchor_top_point[0] + a_top.ports["fixed_l"].width / 2
+    dist = (
+        grating_right_point[0] - anchor_top_point[0] + a_top.ports["fixed_l"].width / 2
+    )
     D.add_ref(
         pr.route_sharp(
             a_top.ports["fixed_l"],
@@ -201,18 +203,18 @@ def just_grate_gatsby(grating: Device) -> Device:
     Just the diffraction grating, without any actuation or support structures.
     """
     D = Device("just_grate_gatsby")
-    w = 2000
+    w = 1000
     rect = pg.rectangle(size=(w, w), layer=0).move((-w / 2, -w / 2))
     bbox = pg.bbox(bbox=grating.bbox)
     grating_w, grating_h = (
         grating.bbox[1][0] - grating.bbox[0][0],
         grating.bbox[1][1] - grating.bbox[0][1],
     )
-    grating.move((-grating_w / 2, -grating_h / 2))
+    grating_ref = D.add_ref(grating)
+    grating_ref.move((-grating_w / 2, -grating_h / 2))
     bbox.move((-grating_w / 2, -grating_h / 2))
     rect = pg.boolean(rect, bbox, operation="A-B", layer=0)
     D << rect
-    D << grating
 
     # text
     # dev_text = pg.text(f"G R A T E", size=200, justify="center")
@@ -245,7 +247,8 @@ def combed_gatsby(
         name="gnd_port",
         midpoint=(
             a_top.ports["fixed_l"].midpoint[0] + a_top.ports["fixed_l"].width / 2,
-            (a_top.ports["fixed_l"].midpoint[1] + a_bot.ports["fixed_l"].midpoint[1]) / 2,
+            (a_top.ports["fixed_l"].midpoint[1] + a_bot.ports["fixed_l"].midpoint[1])
+            / 2,
         ),
         orientation=0,
     )
@@ -271,6 +274,93 @@ def combed_gatsby(
     return D
 
 
+def rigor_mortis_gatsby(
+    comb: Device,
+    anchor: Device,
+    grating: Device,
+    vcc_pad_size: tuple[float, float],
+    gnd_pad_size: tuple[float, float],
+) -> Device:
+    """
+    Single sided optically tunable diffraction grating with no springs. The entire device
+    will just shift side to side; in theory we should be able to measure a phase shift.
+    """
+    D = Device("rigor_mortis_gatsby")
+    grating_ref = D.add_ref(grating)
+    comb_ref = D.add_ref(comb)
+    comb_ref.connect("grating_conn", grating_ref.ports["right"])
+
+    grating_width = grating.bbox[1][0] - grating.bbox[0][0]
+    grating_top = grating.bbox[1][1]
+    grating_bottom = grating.bbox[0][1]
+
+    support_truss = truss(w=grating_width + 6, h=22, margin=2, dist=2.5)
+    if "spring_conn" not in support_truss.ports:
+        support_truss.add_port(
+            "spring_conn", midpoint=(25, 22), width=50, orientation=90
+        )
+    support_truss_top = D.add_ref(support_truss).move((grating.bbox[0][0], grating_top))
+    support_truss_bot = (
+        D.add_ref(support_truss)
+        .mirror((1, 0))
+        .move((grating.bbox[0][0], grating_bottom))
+    )
+
+    a_top = (
+        D.add_ref(anchor)
+        .mirror((0, 1))
+        .connect("floating", comb_ref.ports["anchor_top"])
+    )
+    a_bot = D.add_ref(anchor).connect("floating", comb_ref.ports["anchor_bottom"])
+    a_top2 = D.add_ref(anchor).connect(
+        "floating", support_truss_top.ports["spring_conn"]
+    )
+    a_bot2 = (
+        D.add_ref(anchor)
+        .mirror((0, 1))
+        .connect("floating", support_truss_bot.ports["spring_conn"])
+    )
+    D << pr.route_sharp(
+        a_top.ports["fixed_l"],
+        a_bot.ports["fixed_l"],
+        width=a_top.ports["fixed_l"].width,
+        path_type="U",
+        length1=grating_width + 100,
+    )
+    D << pr.route_sharp(
+        a_top2.ports["fixed_l"],
+        a_bot2.ports["fixed_l"],
+        width=a_top2.ports["fixed_l"].width,
+        path_type="U",
+        length1=100 - 6,
+    )
+
+    # pads
+    vcc_pad = D.add_ref(pg.compass(size=vcc_pad_size)).connect(
+        "E", comb_ref.ports["fixed_conn"]
+    )
+    gnd_port = D.add_port(
+        name="gnd_port",
+        midpoint=(
+            a_top.ports["fixed_l"].midpoint[0]
+            + a_top.ports["fixed_l"].width / 2
+            - 100
+            - grating_width,
+            (a_top.ports["fixed_l"].midpoint[1] + a_bot.ports["fixed_l"].midpoint[1])
+            / 2,
+        ),
+        orientation=180,
+    )
+    gnd_pad = (
+        D.add_ref(pg.compass(size=gnd_pad_size))
+        .move((-gnd_pad_size[0], 0))
+        .connect("E", gnd_port)
+    )
+
+    # qp(D)
+    return D
+
+
 def flexible_grating(
     N: int, bar_w: float, bar_l: float, pitch: float, spring_l: float, spring_w: float
 ) -> Device:
@@ -285,25 +375,32 @@ def flexible_grating(
     spring_w: width of spring bar
     """
     D = Device("grating")
-    assert spring_w * 2 < bar_w, "spring thickness must be less than half the bar width"
+    # assert spring_w * 2 < bar_w, "spring thickness must be less than half the bar width"
+    offset = bar_w / 3 - spring_w
 
     # Grating bars
     grating_model = grating(N, bar_w, bar_l, pitch)
     D.add_ref(grating_model)
 
     # Springs
-    spring_model = spring(L=spring_l, w=spring_w, space=pitch - bar_w)
+    spring_model = spring(L=spring_l, w=spring_w, space=pitch - bar_w + 2 * offset)
+    fillet = fillet_shape(radius=1)
     for i in range(N - 1):
         spring_ref = D.add_ref(spring_model)
-        spring_ref.move((i * pitch + bar_w, bar_l))
+        spring_ref.move((i * pitch + bar_w - offset, bar_l))
         spring_ref_bottom = D.add_ref(spring_model)
         spring_ref_bottom.mirror((1, 0))
-        spring_ref_bottom.move((i * pitch + bar_w, 0))
+        spring_ref_bottom.move((i * pitch + bar_w - offset, 0))
+        if offset != 0:
+            D.add_ref(fillet).rotate(-90).move((i * pitch + bar_w - offset - 1, bar_l))
+            D.add_ref(fillet).rotate(0).move((i * pitch + bar_w - offset - 1, 0))
+            D.add_ref(fillet).rotate(90).move((i * pitch + bar_w + spring_w + 1 - offset * 2, 0))
+            D.add_ref(fillet).rotate(180).move((i * pitch + bar_w + spring_w + 1 - offset * 2, bar_l))
 
     # Hack in a bunch of truss holes
     HOLE_DIAM = 4
     OFFSET_Y = 1.5
-    SPACE_Y = 3
+    SPACE_Y = 6
     hole_template = Device()
     hole_circle = pg.circle(radius=HOLE_DIAM / 2)
     for y in np.arange(OFFSET_Y + HOLE_DIAM / 2, bar_l, SPACE_Y + HOLE_DIAM):
@@ -342,12 +439,21 @@ def grating(N: int, bar_w: float, bar_l: float, pitch: float) -> Device:
     for i in range(N):
         bar_ref = D.add_ref(ref_bar)
         bar_ref.move((i * pitch, 0))
+    D.add_port(name="left", midpoint=(-bar_w, bar_l / 2), width=bar_w, orientation=180)
+    D.add_port(
+        name="right", midpoint=(N * pitch, bar_l / 2), width=bar_w, orientation=0
+    )
     # qp(D)
     return D
 
 
 def spring(
-    L: float, w: float, space: float, fillet: float = 5, L_right: float = None
+    L: float,
+    w: float,
+    space: float,
+    fillet: float = 5,
+    L_right: float = None,
+    top_extra=4,
 ) -> Device:
     """
     Spring for diffraction grating.
@@ -364,8 +470,8 @@ def spring(
     D.add_polygon(
         [
             (-w, 0),
-            (-w, L),
-            (space + w, L),
+            (-w, L + top_extra),
+            (space + w, L + top_extra),
             (space + w, L - L_right),
             (space, L - L_right),
             (space, L - w),
@@ -542,8 +648,7 @@ def anchor_single(
     fillet: float = 3,
     fixed_anchor_w: float = 100,
 ) -> Device:
-    """
-    """
+    """ """
     D = Device("anchor_single")
     flexure = pg.rectangle(size=(w, L))
     D.add_ref(flexure).move((-w, 0))
@@ -559,9 +664,7 @@ def anchor_single(
     D.add_ref(fillet).rotate(-90).move((-5 * w, L))
     D.add_ref(fillet).rotate(180).move((-6 * w, L))
 
-    D.add_port(
-        name="floating", midpoint=(-3*w, 0), width=w, orientation=270
-    )
+    D.add_port(name="floating", midpoint=(-3 * w, 0), width=w, orientation=270)
     D.add_port(
         name="fixed",
         midpoint=(-anchor_w + fixed_anchor_w / 2, L + anchor_h),
@@ -576,6 +679,7 @@ def anchor_single(
     )
     # qp(D)
     return D
+
 
 def comb(
     N: int,
@@ -699,9 +803,19 @@ def truss(
 
 if __name__ == "__main__":
     phidl.set_quickplot_options(blocking=True)
+    g = grating(N=50, bar_w=6, bar_l=500, pitch=12)
+    c = comb(N=100, w=2, L=50, pitch=8, inset=10, w_fixed=200, w_float=50)
+    a = anchor_single(anchor_w=50, anchor_h=100, L=300, w=3, space=94)
+    rigor_mortis_gatsby(
+        comb=c,
+        anchor=a,
+        grating=g,
+        vcc_pad_size=(1000, 1000),
+        gnd_pad_size=(1000, 1000),
+    )
     # f = flexible_grating(N=50, bar_w=6, bar_l=300, pitch=10, spring_l=100, spring_w=2)
-    a = anchor_extraduty(anchor_w=580, anchor_h=100, L1=1300, L2=500, w=3, space=94)
-    a = anchor_single(anchor_w=580, anchor_h=100, L=1300, w=3, space=94)
+    # a = anchor_extraduty(anchor_w=580, anchor_h=100, L1=1300, L2=500, w=3, space=94)
+    # a = anchor_single(anchor_w=580, anchor_h=100, L=1300, w=3, space=94)
     # a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=500, w=5, space=94)
     # # a = anchor(anchor_w=100, anchor_h=100, L1=1300, L2=1500, w=3, space=94)
     # c = comb(N=200, w=3, L=100, pitch=12, inset=20, w_fixed=500, w_float=100)
