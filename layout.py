@@ -103,7 +103,7 @@ def chip(
     )
     D.add_ref(grate).move((-width / 4 - 600, height / 4 + 1000))
     grate_small_comb = dev.grate_gatsby(
-        flexible_grating=f,
+        flexible_grating=f3,
         anchor=a,
         comb=c_small,
         vcc_pad_size=(1000, 1000),
