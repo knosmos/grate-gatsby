@@ -237,7 +237,7 @@ def chip(
                 D_simplified.add_ref(ref.parent).rotate(ref.rotation).move(
                     ref.origin
                 ).move(device.origin)
-    outline = pg.kl_outline(D_simplified, distance=90, tile_size=(20000, 20000))
+    outline = pg.kl_outline(D_simplified, distance=50, tile_size=(20000, 20000))
     # D << outline
     # D_simplified
     # D_simplified.remap_layers({0: 1})
