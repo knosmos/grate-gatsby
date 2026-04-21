@@ -21,6 +21,7 @@ def chip(
     flexure_width: float,
     flexure_length: float,
     grating_width: float,
+    spring_width: float,
     name: str = "1",
 ):
     """
@@ -51,7 +52,7 @@ def chip(
         bar_l=500,
         pitch=grating_width * 2,
         spring_l=spring_length,
-        spring_w=2,
+        spring_w=spring_width, #2,
     )
     f3 = dev.flexible_grating(
         N=50,
@@ -59,7 +60,7 @@ def chip(
         bar_l=500,
         pitch=grating_width * 2,
         spring_l=spring_length,
-        spring_w=3,
+        spring_w=spring_width, #3,
     )
     a = dev.anchor_single(
         anchor_w=50,
@@ -237,7 +238,7 @@ def chip(
                 D_simplified.add_ref(ref.parent).rotate(ref.rotation).move(
                     ref.origin
                 ).move(device.origin)
-    outline = pg.kl_outline(D_simplified, distance=50, tile_size=(20000, 20000))
+    outline = pg.kl_outline(D_simplified, distance=50, tile_size=(25000, 25000), merge_after=False, precision=0.00001)
     # D << outline
     # D_simplified
     # D_simplified.remap_layers({0: 1})
@@ -272,12 +273,18 @@ def chip(
 
 
 def wafer():
-    flexure_lengths = [100, 200, 330]
+    flexure_lengths = [100, 300]
     flexure_widths = [2, 3, 5]
     grating_widths = [6]
     finger_lengths = [50]
-    spring_lengths = [100, 50, 120]
-    devices = []
+    spring_lengths = [100, 60]
+    spring_widths = [2, 3]
+    devices = [Device("empty") for _ in range(36)]
+    indices = [         3, 4, 5,
+               9,10,11,12,13,14,15,16,17,
+              18,19,20,21,22,23,24,25,26,
+                       30,31,32,
+               ]
     f = open("output/device_params.csv", "w")
     f.write(
         "num, finger_length, spring_length, flexure_width, flexure_length, grating_width\n"
@@ -289,15 +296,16 @@ def wafer():
             flexure_widths,
             flexure_lengths,
             grating_widths,
+            spring_widths,
         )
     ):
         print(f"Generating device {num} with parameters {paramset}...")
         device = chip(*paramset, name=str(num))
-        devices.append(device)
+        devices[indices[num]] = device
         f.write(f"{num}, {", ".join(map(str, paramset))}\n")
     f.close()
     D = Device("wafer")
-    G = pg.grid(devices, spacing=(1000, 1000), separation=True, shape=(9, 3))
+    G = pg.grid(devices, spacing=(1000, 1000), separation=True, shape=(9, 4))
     circ_outer = pg.circle(2 * 25400)
     circ_inner = pg.circle(2 * 25400 - 100)
     D << pg.boolean(circ_outer, circ_inner, "A-B", layer=2)
