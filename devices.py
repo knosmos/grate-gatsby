@@ -394,8 +394,12 @@ def flexible_grating(
         if offset != 0:
             D.add_ref(fillet).rotate(-90).move((i * pitch + bar_w - offset - 1, bar_l))
             D.add_ref(fillet).rotate(0).move((i * pitch + bar_w - offset - 1, 0))
-            D.add_ref(fillet).rotate(90).move((i * pitch + bar_w + spring_w + 1 - offset * 2, 0))
-            D.add_ref(fillet).rotate(180).move((i * pitch + bar_w + spring_w + 1 - offset * 2, bar_l))
+            D.add_ref(fillet).rotate(90).move(
+                (i * pitch + bar_w + spring_w + 1 - offset * 2, 0)
+            )
+            D.add_ref(fillet).rotate(180).move(
+                (i * pitch + bar_w + spring_w + 1 - offset * 2, bar_l)
+            )
 
     # Hack in a bunch of truss holes
     HOLE_DIAM = 4
