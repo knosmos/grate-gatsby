@@ -297,7 +297,7 @@ def wafer():
         f.write(f"{num}, {", ".join(map(str, paramset))}\n")
     f.close()
     D = Device("wafer")
-    G = pg.grid(devices, spacing=(1200, 1200), separation=True, shape=(9, 3))
+    G = pg.grid(devices, spacing=(1000, 1000), separation=True, shape=(9, 3))
     circ_outer = pg.circle(2 * 25400)
     circ_inner = pg.circle(2 * 25400 - 100)
     D << pg.boolean(circ_outer, circ_inner, "A-B", layer=2)
