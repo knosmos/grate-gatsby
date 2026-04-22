@@ -402,24 +402,24 @@ def flexible_grating(
             )
 
     # Hack in a bunch of truss holes
-    HOLE_DIAM = 4
-    OFFSET_Y = 1.5
-    SPACE_Y = 6
-    hole_template = Device()
-    hole_circle = pg.circle(radius=HOLE_DIAM / 2)
-    for y in np.arange(OFFSET_Y + HOLE_DIAM / 2, bar_l, SPACE_Y + HOLE_DIAM):
-        hole_template.add_ref(hole_circle).move((HOLE_DIAM / 2, y))
-    # Left side
-    D = pg.boolean(D, hole_template, operation="A-B", layer=0)
-    # Right side
-    hole_template.move(((N - 1) * pitch + bar_w - HOLE_DIAM, 0))
-    D = pg.boolean(D, hole_template, operation="A-B", layer=0)
+    # HOLE_DIAM = 4
+    # OFFSET_Y = 1.5
+    # SPACE_Y = 6
+    # hole_template = Device()
+    # hole_circle = pg.circle(radius=HOLE_DIAM / 2)
+    # for y in np.arange(OFFSET_Y + HOLE_DIAM / 2, bar_l, SPACE_Y + HOLE_DIAM):
+    #     hole_template.add_ref(hole_circle).move((HOLE_DIAM / 2, y))
+    # # Left side
+    # D = pg.boolean(D, hole_template, operation="A-B", layer=0)
+    # # Right side
+    # hole_template.move(((N - 1) * pitch + bar_w - HOLE_DIAM, 0))
+    # D = pg.boolean(D, hole_template, operation="A-B", layer=0)
 
     # Ports
-    D.add_port(name="left", midpoint=(0, bar_l / 2), width=bar_w, orientation=180)
+    D.add_port(name="left", midpoint=(0 + 2, bar_l / 2), width=bar_w, orientation=180)
     D.add_port(
         name="right",
-        midpoint=((N - 1) * pitch + bar_w, bar_l / 2),
+        midpoint=((N - 1) * pitch + bar_w - 2, bar_l / 2),
         width=bar_w,
         orientation=0,
     )
@@ -724,7 +724,7 @@ def comb(
     for i in range(N - 1):
         finger_ref = D.add_ref(finger_model)
         finger_ref.move((L - inset, i * pitch + offset))
-    float_bar = truss(w=w_float, h=height)
+    float_bar = truss(w=w_float, h=height, margin=3)
     float_bar_ref = D.add_ref(float_bar)
     float_bar_ref.move((L * 2 - inset, 0))
 

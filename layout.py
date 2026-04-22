@@ -86,10 +86,10 @@ def chip(
         space=94,
     )
     c = dev.comb(
-        N=100, w=3, L=finger_length, pitch=12, inset=20, w_fixed=100, w_float=50
+        N=100, w=3, L=finger_length, pitch=12, inset=20, w_fixed=100, w_float=52
     )
     c_small = dev.comb(
-        N=100, w=2, L=finger_length, pitch=8, inset=20, w_fixed=50, w_float=50
+        N=100, w=2, L=finger_length, pitch=8, inset=20, w_fixed=50, w_float=52
     )
     g = dev.grating(N=50, bar_w=grating_width, bar_l=500, pitch=12)
 
@@ -327,6 +327,6 @@ def wafer():
 
 if __name__ == "__main__":
     # phidl.set_quickplot_options(blocking=True)
-    # D = chip(50, 120, 3, 200, 6)
+    # D = chip(50, 120, 3, 200, 6, 2)
     # D.write_gds("output/test_chip.gds")
     wafer()
