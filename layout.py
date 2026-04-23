@@ -111,7 +111,7 @@ def chip(
         gnd_pad_size=(1000, 1000),
         gnd_trace_length=0,
     )
-    D.add_ref(grate_small_comb).move((-width / 4 - 600, 0))
+    D.add_ref(grate_small_comb).move((-width / 4 - 600, 300))
     grate_extraduty = dev.grate_gatsby(
         flexible_grating=f,
         anchor=a_extra,
@@ -329,4 +329,4 @@ if __name__ == "__main__":
     # phidl.set_quickplot_options(blocking=True)
     D = chip(50, 120, 3, 200, 6, 3, name="TEST")
     D.write_gds("output/test_chip.gds")
-    # wafer()
+    wafer()
