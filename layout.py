@@ -75,7 +75,7 @@ def chip(
         L1=flexure_length,
         L2=flexure_length,
         w=flexure_width,
-        space=94,
+        space=95,
     )
     a_extra_unequal = dev.anchor_extraduty(
         anchor_w=50,
@@ -83,13 +83,13 @@ def chip(
         L1=flexure_length,
         L2=flexure_length + 200,
         w=flexure_width,
-        space=94,
+        space=95,
     )
     c = dev.comb(
-        N=100, w=3, L=finger_length, pitch=12, inset=20, w_fixed=100, w_float=52
+        N=100, w=3, L=finger_length, pitch=12, inset=20, w_fixed=100, w_float=48.5
     )
     c_small = dev.comb(
-        N=100, w=2, L=finger_length, pitch=8, inset=20, w_fixed=50, w_float=52
+        N=100, w=2, L=finger_length, pitch=8, inset=20, w_fixed=50, w_float=48.5
     )
     g = dev.grating(N=50, bar_w=grating_width, bar_l=500, pitch=12)
 
@@ -280,7 +280,7 @@ def chip(
 
 def wafer():
     flexure_lengths = [100, 300]
-    flexure_widths = [2, 3, 5]
+    flexure_widths = [3, 4, 5]
     grating_widths = [6]
     finger_lengths = [50]
     spring_lengths = [100, 60]
@@ -327,6 +327,6 @@ def wafer():
 
 if __name__ == "__main__":
     # phidl.set_quickplot_options(blocking=True)
-    # D = chip(50, 120, 3, 200, 6, 2)
-    # D.write_gds("output/test_chip.gds")
-    wafer()
+    D = chip(50, 120, 3, 200, 6, 3, name="TEST")
+    D.write_gds("output/test_chip.gds")
+    # wafer()

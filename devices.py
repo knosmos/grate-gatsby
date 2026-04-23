@@ -570,7 +570,7 @@ def anchor_extraduty(
     space: float,
     fillet: float = 3,
     fixed_anchor_w: float = 100,
-    suspended_h: float = 30,
+    suspended_h: float = 26,
 ) -> Device:
     """
     Anchor and flexure support.
@@ -724,7 +724,7 @@ def comb(
     for i in range(N - 1):
         finger_ref = D.add_ref(finger_model)
         finger_ref.move((L - inset, i * pitch + offset))
-    float_bar = truss(w=w_float, h=height, margin=3)
+    float_bar = truss(w=w_float, h=height, margin=4)
     float_bar_ref = D.add_ref(float_bar)
     float_bar_ref.move((L * 2 - inset, 0))
 
@@ -774,7 +774,7 @@ truss_mem = {}  # memoization since truss generation takes a long time
 
 
 def truss(
-    w: float, h: float, diam: float = 4, dist: float = 3, margin: float = 2
+    w: float, h: float, diam: float = 4, dist: float = 3.5, margin: float = 3
 ) -> Device:
     """
     Truss structure for rigidity. Dimensions should be equiv dist mod (diam+dist) for prettiest results.
@@ -793,8 +793,8 @@ def truss(
     hole = pg.circle(radius=diam / 2)
     H = Device("holes")
 
-    slots_x = np.arange(margin + diam / 2, w - diam / 2 + 1, dist + diam)
-    slots_y = np.arange(margin + diam / 2, h - diam / 2 + 1, dist + diam)
+    slots_x = np.arange(margin + diam / 2, w - diam / 2 + 2 - margin, dist + diam)
+    slots_y = np.arange(margin + diam / 2, h - diam / 2 + 2 - margin, dist + diam)
     locations = [(x, y) for x in slots_x for y in slots_y]
     for loc in locations:
         H.add_ref(hole).move(loc)
