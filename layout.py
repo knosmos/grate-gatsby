@@ -284,7 +284,7 @@ def wafer():
     grating_widths = [6]
     finger_lengths = [50]
     spring_lengths = [100, 60]
-    spring_widths = [2, 3]
+    spring_widths = [2.5, 3.5]
     devices = [Device("empty") for _ in range(36)]
     # fmt: off
     indices = [

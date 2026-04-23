@@ -384,7 +384,7 @@ def flexible_grating(
 
     # Springs
     spring_model = spring(L=spring_l, w=spring_w, space=pitch - bar_w + 2 * offset)
-    fillet = fillet_shape(radius=1)
+    fillet = fillet_shape(radius=abs(offset))
     for i in range(N - 1):
         spring_ref = D.add_ref(spring_model)
         spring_ref.move((i * pitch + bar_w - offset, bar_l))
@@ -392,13 +392,13 @@ def flexible_grating(
         spring_ref_bottom.mirror((1, 0))
         spring_ref_bottom.move((i * pitch + bar_w - offset, 0))
         if offset != 0:
-            D.add_ref(fillet).rotate(-90).move((i * pitch + bar_w - offset - 1, bar_l))
-            D.add_ref(fillet).rotate(0).move((i * pitch + bar_w - offset - 1, 0))
+            D.add_ref(fillet).rotate(-90).move((i * pitch + bar_w, bar_l))
+            D.add_ref(fillet).rotate(0).move((i * pitch + bar_w, 0))
             D.add_ref(fillet).rotate(90).move(
-                (i * pitch + bar_w + spring_w + 1 - offset * 2, 0)
+                ((i+1) * pitch, 0)
             )
             D.add_ref(fillet).rotate(180).move(
-                (i * pitch + bar_w + spring_w + 1 - offset * 2, bar_l)
+                ((i+1) * pitch, bar_l)
             )
 
     # Hack in a bunch of truss holes
