@@ -1,4 +1,4 @@
-num, finger_length, spring_length, flexure_width, flexure_length, grating_width
+num, finger_length, spring_length, flexure_width, flexure_length, grating_width, spring_width
 0, 50, 100, 3, 100, 6, 2.5
 1, 50, 100, 3, 100, 6, 3.5
 2, 50, 100, 3, 300, 6, 2.5
