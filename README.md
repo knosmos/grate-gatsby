@@ -7,6 +7,8 @@ MEMS-actuated optical diffraction gratings are a promising technology for applic
 
 [Technical paper](/img/paper.pdf)
 
+[Project Presentation](https://docs.google.com/presentation/d/e/2PACX-1vQXB0M1xmewHRNvFU4T3vgQ8k_zZIwviEbwVnmHmlpDbTlaOk5E5B1BzpE7vICLoAxJymx_KQaP-qTi/pub?start=false&loop=false&delayms=3000) (We won best presentation!)
+
 ## Design Overview
 ### Chip Layout
 ![Device Layout](https://raw.githubusercontent.com/knosmos/grate-gatsby/refs/heads/main/img/device.png)
@@ -33,8 +35,10 @@ And a phone video of the actuation:
 
 What you see moving here is the diffraction off the comb drive; the actual diffraction shift is on the order of microradians and is not visible to the naked eye. However, we live in a society that can make better eyes. Here are measurements of the first-order diffraction shift from a very sensitive quadrant cell photoreceiver:
 <p align="center">
-<img align="center" width="70%" alt="image" src="https://github.com/user-attachments/assets/57449e0f-ad87-431b-bf16-198db5e904b8" />
+<img align="center" width="70%" alt="image" src="https://github.com/user-attachments/assets/11fd9c6b-9ff6-423f-bd1d-8c14732b2e74" />
 </p>
+
+The observed results match the general theoretical trend, though less actuation is observed than expected. 
 
 ## Imaging
 We also imaged our devices after fabrication to evaluate their survival, and characterize their failure modes. Here's a beautiful interferogram of a device, showing that the suspended structure is indeed still suspended:
@@ -42,12 +46,17 @@ We also imaged our devices after fabrication to evaluate their survival, and cha
 <img width="70%" alt="image" src="https://github.com/user-attachments/assets/9fe43dc1-d245-40cf-befe-73736b6084e2" />
 </p>
 
-And here is an SEM image of a device. We observe DRIE overetch causing charge accumulation on the oxide layer, creating local electric fields that redirect etching ions into the side walls.
+And here is an SEM image of a device. We observe DRIE overetch causing charge accumulation on the oxide layer, creating local electric fields that redirect etching ions into the side walls. On the comb drives, this is enough to significantly reduce the interaction area, which likely explains the reduced actuation.
 <p align="center">
 <img width="70%" src="https://github.com/user-attachments/assets/1974af83-7483-4327-8b47-f6b6520807bf" />
 </p>
 
 ## Contributors
-- Jieruei Chang, *MIT EECS*
-- Keira Boone, *MIT DMSE*
-- Alysha Rawji, *MIT AeroAstro*
+- Jieruei Chang, *MIT EECS* (design and fabrication)
+- Keira Boone, *MIT DMSE* (fabrication and packaging)
+- Alysha Rawji, *MIT AeroAstro* (SEM imaging)
+
+## Acknowledgments
+- Dr. Juan Ferrera (this man spent like 100 hours in the fab to help us finish this thing)
+- Ben Newcomb (for tediously fixing the wire bonder after we broke it)
+- Prof. Farnaz Niroui (we stole her optics lab for a month to build the testing setup)
