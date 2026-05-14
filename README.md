@@ -5,9 +5,11 @@
 
 MEMS-actuated optical diffraction gratings are a promising technology for applications in compact spectrometers and beam steering devices. This repository contains parameterized layout code for a single-mask SOI MEMS diffraction grating design, featuring a tunable grating pitch achieved through comb-drive electrostatic actuation. Each chip is designed to fit on a SOIC-28 package, with grating targets of 590 x 500 microns. Twelve devices are included on each chip: three double-sided comb drive diffraction gratings, four single-sided comb drive diffraction gratings, two comb drive testing devices (without gratings), two phase-shifting diffraction gratings (built with rigid gratings), and one fixed grating target.
 
-[Technical paper](/img/paper.pdf)
+[Technical Paper](/img/paper.pdf) (This has a lot more of the theory and fabrication details)
 
 [Project Presentation](https://docs.google.com/presentation/d/e/2PACX-1vQXB0M1xmewHRNvFU4T3vgQ8k_zZIwviEbwVnmHmlpDbTlaOk5E5B1BzpE7vICLoAxJymx_KQaP-qTi/pub?start=false&loop=false&delayms=3000) (We won best presentation!)
+
+[Github Repo](https://github.com/knosmos/grate-gatsby)
 
 ## Design Overview
 ### Chip Layout
@@ -25,17 +27,17 @@ The full 6-inch wafer layout includes 24 chips generated from a parametric sweep
 ## Optical Testing
 The device works surprisingly well! Here's a picture of the optical testing setup and our chip with a HeNe laser focused on one of the devices:
 <p align="center">
-<img width="2531" height="1146" alt="image" src="https://github.com/user-attachments/assets/a22e1d20-6b26-4442-8d40-3cb7fee5c1b7" />
+<img width="70%" alt="image" src="https://github.com/user-attachments/assets/a22e1d20-6b26-4442-8d40-3cb7fee5c1b7" />
 </p>
 
 And a phone video of the actuation:
 <p align="center">
-<img align="center" width="70%" alt="diffraction-actuation" src="https://github.com/user-attachments/assets/f8fe6eca-3c8e-4d03-bda4-fccb9f366921" />
+<img align="center" width="50%" alt="diffraction-actuation" src="https://github.com/user-attachments/assets/f8fe6eca-3c8e-4d03-bda4-fccb9f366921" />
 </p>
 
 What you see moving here is the diffraction off the comb drive; the actual diffraction shift is on the order of microradians and is not visible to the naked eye. However, we live in a society that can make better eyes. Here are measurements of the first-order diffraction shift from a very sensitive quadrant cell photoreceiver:
 <p align="center">
-<img align="center" width="70%" alt="image" src="https://github.com/user-attachments/assets/11fd9c6b-9ff6-423f-bd1d-8c14732b2e74" />
+<img align="center" width="40%" alt="image" src="https://github.com/user-attachments/assets/11fd9c6b-9ff6-423f-bd1d-8c14732b2e74" />
 </p>
 
 The observed results match the general theoretical trend, though less actuation is observed than expected. 
@@ -43,12 +45,12 @@ The observed results match the general theoretical trend, though less actuation 
 ## Imaging
 We also imaged our devices after fabrication to evaluate their survival, and characterize their failure modes. Here's a beautiful interferogram of a device, showing that the suspended structure is indeed still suspended:
 <p align="center">
-<img width="70%" alt="image" src="https://github.com/user-attachments/assets/9fe43dc1-d245-40cf-befe-73736b6084e2" />
+<img width="50%" alt="image" src="https://github.com/user-attachments/assets/9fe43dc1-d245-40cf-befe-73736b6084e2" />
 </p>
 
 And here is an SEM image of a device. We observe DRIE overetch causing charge accumulation on the oxide layer, creating local electric fields that redirect etching ions into the side walls. On the comb drives, this is enough to significantly reduce the interaction area, which likely explains the reduced actuation.
 <p align="center">
-<img width="70%" src="https://github.com/user-attachments/assets/1974af83-7483-4327-8b47-f6b6520807bf" />
+<img width="50%" src="https://github.com/user-attachments/assets/1974af83-7483-4327-8b47-f6b6520807bf" />
 </p>
 
 ## Gallery
@@ -65,9 +67,9 @@ And here is an SEM image of a device. We observe DRIE overetch causing charge ac
   <br>
   IMO any optics thing looks much cooler in the dark. You can see so many diffraction orders here
   <br><br>
-  <img width="50%" height="1330" alt="image" src="https://github.com/user-attachments/assets/2e03d07d-fa32-43e3-b16a-59a08bee663d" />
+  <img width="50%" alt="image" src="https://github.com/user-attachments/assets/2e03d07d-fa32-43e3-b16a-59a08bee663d" />
   <br>
-  Look at this pretty box (since the headered pcb wouldn't fit in the gel-pak)
+  Look at this pretty box (since the headered pcb wouldn't fit in the gel-pak T_T)
 </p>
 
 ## Contributors
