@@ -51,6 +51,25 @@ And here is an SEM image of a device. We observe DRIE overetch causing charge ac
 <img width="70%" src="https://github.com/user-attachments/assets/1974af83-7483-4327-8b47-f6b6520807bf" />
 </p>
 
+## Gallery
+<p align="center">
+<img width="50%" alt="image" src="https://github.com/user-attachments/assets/367dd296-71cd-4cc2-a26a-14a6dc161c82" />
+  <br>
+  Holding the chip at gunpoint (with an antistatic gun) while wirebonding
+  <br><br>
+  <img width="50%" alt="image" src="https://github.com/user-attachments/assets/b285e2b2-40c7-45e6-8be3-878178bd78a7" />
+  <br>
+  Very pretty (and very unsuccessful) first fabrication attempt on a 2.2 micron wafer. The support structures were hilariously undersized (despite handcalcs saying it would be ok).
+  <br><br>
+  <img width="50%" alt="image" src="https://github.com/user-attachments/assets/16470c2a-1473-4644-9758-b8d998aeba76" />
+  <br>
+  IMO any optics thing looks much cooler in the dark. You can see so many diffraction orders here
+  <br><br>
+  <img width="50%" height="1330" alt="image" src="https://github.com/user-attachments/assets/2e03d07d-fa32-43e3-b16a-59a08bee663d" />
+  <br>
+  Look at this pretty box (since the headered pcb wouldn't fit in the gel-pak)
+</p>
+
 ## Contributors
 - Jieruei Chang, *MIT EECS* (design and fabrication)
 - Keira Boone, *MIT DMSE* (fabrication and packaging)
